@@ -28,7 +28,7 @@ class Client implements ClientInterface {
 	public function __construct($baseUrl, $apiKey)
 	{
 		$this->client = new HttpClient([
-			'base_url' => $baseUrl,
+			'base_uri' => $baseUrl,
 			'defaults' => [
 				'query' => [ 'api_key' => $apiKey ]
 			]
