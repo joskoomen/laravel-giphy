@@ -10,50 +10,48 @@
  * @version 0.1
  */
 
-use HiddeCo\Giphy\Contracts\ClientInterface;
 use GuzzleHttp\Client as HttpClient;
+use HiddeCo\Giphy\Contracts\ClientInterface;
 
-class Client implements ClientInterface {
+class Client implements ClientInterface
+{
 
-	/**
-	 * @var HttpClient
-	 */
-	protected $client;
-
-
-	/**
-	 * @param $baseUrl
-	 * @param $apiKey
-	 */
-	public function __construct($baseUrl, $apiKey)
-	{
-		$this->client = new HttpClient([
-			'base_uri' => $baseUrl,
-			'defaults' => [
-				'query' => [ 'api_key' => $apiKey ]
-			]
-		]);
-	}
+    /**
+     * @var HttpClient
+     */
+    protected $client;
 
 
-	/**
-	 * @param       $endPoint
-	 * @param array $params
-	 *
-	 * @return mixed
-	 * @throws \Exception
-	 */
-	public function get($endPoint, array $params = [ ])
-	{
-		$response = $this->client->get($endPoint, [ 'query' => $params ]);
+    /**
+     * @param $baseUrl
+     * @param $apiKey
+     */
+    public function __construct($baseUrl, $apiKey)
+    {
+        $this->client = new HttpClient([
+            'base_uri' => $baseUrl,
+            'query' => ['api_key' => $apiKey]
+        ]);
+    }
 
-		switch ($response->getHeader('content-type'))
-		{
-			case "application/json":
-				return $response->json();
-				break;
-			default:
-				return $response->getBody()->getContents();
-		}
-	}
+
+    /**
+     * @param       $endPoint
+     * @param array $params
+     *
+     * @return mixed
+     * @throws \Exception
+     */
+    public function get($endPoint, array $params = [])
+    {
+        $query = array_merge($this->client->getConfig('query'), $params);
+
+        $response = $this->client->get($endPoint, ['query' => $query]);
+
+        if ($params['fmt'] == 'json') {
+            return response()->json(json_decode($response->getBody()->getContents(), true)['data']);
+        }
+
+        return $response->getBody()->getContents();
+    }
 }
