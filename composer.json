@@ -1,5 +1,5 @@
 {
-  "name": "joskoomen/laravel-giphy",
+  "name": "hiddeco/laravel-giphy",
   "description": "Giphy API wrapper for Laravel and Lumen based on Guzzle",
   "keywords": ["giphy", "api", "laravel"],
   "license": "MIT",
